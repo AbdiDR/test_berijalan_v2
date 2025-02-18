@@ -28,15 +28,17 @@ public class MerkMobilImplement implements MerkMobilService {
     }
 
     @Override
-    public ResponseEntity DeleteOne(Long id) {
-        MerkMobil dataMobil = new MerkMobil();
-        dataMobil = merkMobilRepository.findById(id).get();
-        if (dataMobil == null) {
+    public ResponseEntity<?> DeleteOne(Long id) {
+        Optional<MerkMobil> dataMobilOptional = merkMobilRepository.findById(id);
+
+        if (!dataMobilOptional.isPresent()) {
             return new ResponseEntity<>("Mobil not found", HttpStatus.NOT_FOUND);
         }
+
+        MerkMobil dataMobil = dataMobilOptional.get();
         merkMobilRepository.delete(dataMobil);
 
-        return new ResponseEntity(dataMobil, HttpStatus.OK);
+        return new ResponseEntity<>(dataMobil, HttpStatus.OK);
     }
 
     @Override
